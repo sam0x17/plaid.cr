@@ -46,6 +46,24 @@ module Plaid
     JSON.parse response.body
   end
 
+  def self.balance(access_token : String, account_ids : Array(String))
+    url = endpoint "/accounts/balance/get"
+    form = JSON.build do |json|
+      json.object do
+        json.field "client_id", @@client_id
+        json.field "access_token", access_token
+        json.field "secret", @@secret
+        json.field "options" do
+          json.object do
+            json.field "account_ids", account_ids
+          end
+        end
+      end
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
+
   def self.transactions(access_token : String, start_date : Time | String | Nil = nil, end_date : String | Nil = nil, count : Int32 | Nil = 500, offset : Int32 | Nil = 0)
     url = endpoint "/transactions/get"
     start_date = start_date.to_s("%F") if start_date.is_a? Time
