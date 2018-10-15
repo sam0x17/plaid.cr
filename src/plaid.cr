@@ -46,6 +46,19 @@ module Plaid
     JSON.parse response.body
   end
 
+  def self.identity(access_token : String)
+    url = endpoint "/identity/get"
+    form = JSON.build do |json|
+      json.object do
+        json.field "client_id", @@client_id
+        json.field "access_token", access_token
+        json.field "secret", @@secret
+      end
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
+
   def self.balance(access_token : String, account_ids : Array(String))
     url = endpoint "/accounts/balance/get"
     form = JSON.build do |json|
