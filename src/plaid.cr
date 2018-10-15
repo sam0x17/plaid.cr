@@ -46,7 +46,7 @@ module Plaid
     JSON.parse response.body
   end
 
-  def self.get_transactions(access_token : String, start_date : Time | String | Nil = nil, end_date : String | Nil = nil, count : Int32 | Nil = 500, offset : Int32 | Nil = 0)
+  def self.transactions(access_token : String, start_date : Time | String | Nil = nil, end_date : String | Nil = nil, count : Int32 | Nil = 500, offset : Int32 | Nil = 0)
     url = endpoint "/transactions/get"
     start_date = start_date.to_s("%F") if start_date.is_a? Time
     end_date = end_date.to_s("%F") if end_date.is_a? Time
@@ -69,5 +69,24 @@ module Plaid
     end
     response = HTTP::Client.post url, generate_headers, form
     JSON.parse response.body
+  end
+
+  def self.all_transactions(access_token : String)
+    cursor = 0
+    oldest_date = ""
+    saved_transactions = [] of JSON::Any
+    accounts = nil
+    loop do
+      data = transactions(access_token, nil, nil, 500, cursor)
+      accounts = data["accounts"].as_a if first_dataset.nil?
+      data = data["transactions"].as_a
+      data.each do |transaction|
+        saved_transactions.push transaction
+      end
+      cursor += data.size
+      break if data.empty?
+      oldest_date = data.last["date"]
+    end
+    return saved_transactions, oldest_date, accounts.not_nil!
   end
 end
