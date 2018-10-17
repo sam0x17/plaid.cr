@@ -67,11 +67,11 @@ module Plaid
     standard_endpoint "/income/get", access_token
   end
 
-  def accounts(access_token : String)
+  def self.accounts(access_token : String)
     standard_endpoint "/accounts/get", access_token
   end
 
-  def item(access_token : String)
+  def self.item(access_token : String)
     standard_endpoint "/item/get", access_token
   end
 
@@ -141,7 +141,7 @@ module Plaid
     return saved_transactions, oldest_date, accounts.not_nil!
   end
 
-  def create_asset_report(access_tokens : Array(String), days_requested : Int, options : JSON::Any)
+  def self.create_asset_report(access_tokens : Array(String), days_requested : Int, options : JSON::Any)
     url = endpoint "/asset_report/create"
     form = JSON.build do |json|
       json.object do
@@ -156,7 +156,7 @@ module Plaid
     JSON.parse response.body
   end
 
-  def refresh_asset_report(asset_report_token : String, days_requested : Int | Nil = nil, options : JSON::Any | Nil = nil)
+  def self.refresh_asset_report(asset_report_token : String, days_requested : Int | Nil = nil, options : JSON::Any | Nil = nil)
     url = endpoint "/asset_report/refresh"
     form = JSON.build do |json|
       json.object do
@@ -171,7 +171,7 @@ module Plaid
     JSON.parse response.body
   end
 
-  def filter_asset_report(asset_report_token : String, account_ids_to_exclude : Array(String))
+  def self.filter_asset_report(asset_report_token : String, account_ids_to_exclude : Array(String))
     url = endpoint "/asset_report/filter"
     form = JSON.build do |json|
       json.object do
@@ -185,7 +185,7 @@ module Plaid
     JSON.parse response.body
   end
 
-  def get_asset_report(asset_report_token : String)
+  def self.get_asset_report(asset_report_token : String)
     url = endpoint "/asset_report/get"
     form = JSON.build do |json|
       json.field "client_id", @@client_id
@@ -196,7 +196,7 @@ module Plaid
     JSON.parse response.body
   end
 
-  def get_asset_report_pdf(asset_report_token : String)
+  def self.get_asset_report_pdf(asset_report_token : String)
     url = endpoint "/asset_report/pdf/get"
     form = JSON.build do |json|
       json.field "client_id", @@client_id
@@ -207,7 +207,7 @@ module Plaid
     response.body
   end
 
-  def create_asset_report_audit_copy(asset_report_token : String, auditor_id : String)
+  def self.create_asset_report_audit_copy(asset_report_token : String, auditor_id : String)
     url = endpoint "/asset_report/audit_copy/create"
     form = JSON.build do |json|
       json.field "client_id", @@client_id
@@ -219,7 +219,7 @@ module Plaid
     JSON.parse response.body
   end
 
-  def remove_asset_report(asset_report_token : String)
+  def self.remove_asset_report(asset_report_token : String)
     url = endpoint "/asset_report/remove"
     form = JSON.build do |json|
       json.field "client_id", @@client_id
@@ -230,7 +230,7 @@ module Plaid
     JSON.parse response.body
   end
 
-  def remove_asset_report_audit_copy(audit_copy_token : String)
+  def self.remove_asset_report_audit_copy(audit_copy_token : String)
     url = endpoint "/asset_report/audit_copy/remove"
     form = JSON.build do |json|
       json.field "client_id", @@client_id
@@ -241,7 +241,7 @@ module Plaid
     JSON.parse response.body
   end
 
-  def update_item_webhook(access_token : String, webhook : String)
+  def self.update_item_webhook(access_token : String, webhook : String)
     url = endpoint "/item/webhook/update"
     form = JSON.build do |json|
       json.field "client_id", @@client_id
@@ -253,12 +253,12 @@ module Plaid
     JSON.parse response.body
   end
 
-  def rotate_access_token(access_token : String)
+  def self.rotate_access_token(access_token : String)
     json = standard_endpoint("/item/access_token/invalidate", access_token)
     json["new_access_token"].to_s
   end
 
-  def update_access_token(access_token_v1 : String)
+  def self.update_access_token(access_token_v1 : String)
     url = endpoint "/item/access_token/update_version"
     form = JSON.build do |json|
       json.field "client_id", @@client_id
