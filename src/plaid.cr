@@ -217,4 +217,15 @@ module Plaid
     response = HTTP::Client.post url, generate_headers, form
     JSON.parse response.body
   end
+
+  def remove_asset_report_audit_copy(audit_copy_token : String)
+    url = endpoint "/asset_report/audit_copy/create"
+    form = JSON.build do |json|
+      json.field "client_id", @@client_id
+      json.field "secret", @@secret
+      json.field "audit_copy_token", audit_copy_token
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
 end
