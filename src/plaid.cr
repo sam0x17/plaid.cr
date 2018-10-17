@@ -253,4 +253,15 @@ module Plaid
     json = standard_endpoint("/item/access_token/invalidate", access_token)
     json["new_access_token"].to_s
   end
+
+  def update_access_token(access_token_v1 : String)
+    url = endpoint "/item/access_token/update_version"
+    form = JSON.build do |json|
+      json.field "client_id", @@client_id
+      json.field "secret", @@secret
+      json.field "access_token_v1", access_token_v1
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
 end
