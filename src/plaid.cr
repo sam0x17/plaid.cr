@@ -236,4 +236,16 @@ module Plaid
     response = HTTP::Client.post url, generate_headers, form
     JSON.parse response.body
   end
+
+  def update_item_webhook(access_token : String, webhook : String)
+    url = endpoint "/item/webhook/update"
+    form = JSON.build do |json|
+      json.field "client_id", @@client_id
+      json.field "secret", @@secret
+      json.field "access_token", access_token
+      json.field "webhook", webhook
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
 end
