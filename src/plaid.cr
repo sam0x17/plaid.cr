@@ -227,7 +227,7 @@ module Plaid
   end
 
   def remove_asset_report_audit_copy(audit_copy_token : String)
-    url = endpoint "/asset_report/audit_copy/create"
+    url = endpoint "/asset_report/audit_copy/remove"
     form = JSON.build do |json|
       json.field "client_id", @@client_id
       json.field "secret", @@secret
@@ -247,5 +247,10 @@ module Plaid
     end
     response = HTTP::Client.post url, generate_headers, form
     JSON.parse response.body
+  end
+
+  def rotate_access_token(access_token : String)
+    json = standard_endpoint("/item/access_token/invalidate", access_token)
+    json["new_access_token"].to_s
   end
 end
