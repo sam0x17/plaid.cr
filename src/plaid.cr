@@ -20,6 +20,19 @@ module Plaid
     "https://#{@@mode}.plaid.com#{path}"
   end
 
+  private def self.standard_endpoint(path : String, access_token : String)
+    url = endpoint path
+    form = JSON.build do |json|
+      json.object do
+        json.field "client_id", @@client_id
+        json.field "access_token", access_token
+        json.field "secret", @@secret
+      end
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
+
   def self.mode=(val : Symbol)
     raise "mode must be one of #{VALID_MODES}" unless VALID_MODES.includes? val
     @@mode = val
@@ -47,16 +60,11 @@ module Plaid
   end
 
   def self.identity(access_token : String)
-    url = endpoint "/identity/get"
-    form = JSON.build do |json|
-      json.object do
-        json.field "client_id", @@client_id
-        json.field "access_token", access_token
-        json.field "secret", @@secret
-      end
-    end
-    response = HTTP::Client.post url, generate_headers, form
-    JSON.parse response.body
+    standard_endpoint "/identity/get", access_token
+  end
+
+  def self.income(access_token : String)
+    standard_endpoint "/income/get", access_token
   end
 
   def self.balance(access_token : String, account_ids : Array(String))
