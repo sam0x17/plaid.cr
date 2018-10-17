@@ -194,4 +194,16 @@ module Plaid
     response = HTTP::Client.post url, generate_headers, form
     response.body
   end
+
+  def create_asset_report_audit_copy(asset_report_token : String, auditor_id : String)
+    url = endpoint "/asset_report/audit_copy/create"
+    form = JSON.build do |json|
+      json.field "client_id", @@client_id
+      json.field "secret", @@secret
+      json.field "asset_report_token", asset_report_token
+      json.field "auditor_id", auditor_id
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
 end
