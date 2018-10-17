@@ -128,4 +128,19 @@ module Plaid
     end
     return saved_transactions, oldest_date, accounts.not_nil!
   end
+
+  def create_asset_report(access_tokens : Array(String), days_requested : Int, options : JSON::Any)
+    url = endpoint path
+    form = JSON.build do |json|
+      json.object do
+        json.field "client_id", @@client_id
+        json.field "access_tokens", access_tokens
+        json.field "days_requested", days_requested
+        json.field "secret", @@secret
+        json.field "options", options
+      end
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
 end
