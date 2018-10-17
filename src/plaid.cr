@@ -130,7 +130,7 @@ module Plaid
   end
 
   def create_asset_report(access_tokens : Array(String), days_requested : Int, options : JSON::Any)
-    url = endpoint path
+    url = endpoint "/asset_report/create"
     form = JSON.build do |json|
       json.object do
         json.field "client_id", @@client_id
@@ -138,6 +138,21 @@ module Plaid
         json.field "days_requested", days_requested
         json.field "secret", @@secret
         json.field "options", options
+      end
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
+
+  def refresh_asset_report(asset_report_token : String, days_requested : Int | Nil = nil, options : JSON::Any | Nil = nil)
+    url = endpoint "/asset_report/refresh"
+    form = JSON.build do |json|
+      json.object do
+        json.field "client_id", @@client_id
+        json.field "asset_report_token", asset_report_token
+        json.field "days_requested", days_requested if days_requested != nil
+        json.field "secret", @@secret
+        json.field "options", options if options != nil
       end
     end
     response = HTTP::Client.post url, generate_headers, form
