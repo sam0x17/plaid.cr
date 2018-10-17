@@ -158,4 +158,18 @@ module Plaid
     response = HTTP::Client.post url, generate_headers, form
     JSON.parse response.body
   end
+
+  def filter_asset_report(asset_report_token : String, account_ids_to_exclude : Array(String))
+    url = endpoint "/asset_report/filter"
+    form = JSON.build do |json|
+      json.object do
+        json.field "client_id", @@client_id
+        json.field "secret", @@secret
+        json.field "asset_report_token", asset_report_token
+        json.field "account_ids_to_exclude", account_ids_to_exclude
+      end
+    end
+    response = HTTP::Client.post url, generate_headers, form
+    JSON.parse response.body
+  end
 end
