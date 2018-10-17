@@ -66,6 +66,10 @@ module Plaid
   def self.income(access_token : String)
     standard_endpoint "/income/get", access_token
   end
+  
+  def accounts(access_token : String)
+    standard_endpoint "/accounts/get", access_token
+  end
 
   def self.balance(access_token : String, account_ids : Array(String))
     url = endpoint "/accounts/balance/get"
