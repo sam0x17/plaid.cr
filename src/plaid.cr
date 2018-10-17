@@ -75,6 +75,10 @@ module Plaid
     standard_endpoint "/item/get", access_token
   end
 
+  def self.remove_item(access_token : String)
+    standard_endpoint "/item/remove", access_token
+  end
+
   def self.balance(access_token : String, account_ids : Array(String))
     url = endpoint "/accounts/balance/get"
     form = JSON.build do |json|
